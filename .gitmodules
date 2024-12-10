@@ -1,0 +1,3 @@
+[submodule "drivers/unitree_sdk2"]
+	path = drivers/unitree_sdk2
+	url = https://github.com/unitreerobotics/unitree_sdk2.git
