@@ -251,3 +251,5 @@ algebra/_common/lin_sys/direct/qdldl_sources
 algebra/default/lin_sys/direct/qdldl_sources
 !optimkit/third_party/pinocchio/cmake/coverage.cmake
 MUJOCO_LOG.TXT
+
+!simulator/unitree_robots/*/assets/*.obj
