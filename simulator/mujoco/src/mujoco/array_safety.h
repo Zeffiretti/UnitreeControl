@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef MUJOCO_SAMPLE_ARRAY_SAFETY_H_
-#define MUJOCO_SAMPLE_ARRAY_SAFETY_H_
+#ifndef SIMULATOR_MUJOCO_SRC_MUJOCO_ARRAY_SAFETY_H_
+#define SIMULATOR_MUJOCO_SRC_MUJOCO_ARRAY_SAFETY_H_
 
 #include <algorithm>
 #include <cstdarg>
@@ -36,7 +36,7 @@ namespace sample_util {
 // returns sizeof(arr)
 // use instead of sizeof() to avoid unintended array-to-pointer decay
 template <typename T, int N>
-static constexpr std::size_t sizeof_arr(const T(&arr)[N]) {
+static constexpr std::size_t sizeof_arr(const T (&arr)[N]) {
   return sizeof(arr);
 }
 
@@ -102,4 +102,4 @@ static inline char* strcpy_arr(char (&dest)[N], const char* src) {
 }  // namespace sample_util
 }  // namespace mujoco
 
-#endif  // MUJOCO_SAMPLE_ARRAY_SAFETY_H_
+#endif  // SIMULATOR_MUJOCO_SRC_MUJOCO_ARRAY_SAFETY_H_

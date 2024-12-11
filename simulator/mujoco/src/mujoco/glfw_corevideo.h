@@ -12,21 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef MUJOCO_SIMULATE_GLFW_COREVIDEO_H_
-#define MUJOCO_SIMULATE_GLFW_COREVIDEO_H_
+#ifndef SIMULATOR_MUJOCO_SRC_MUJOCO_GLFW_COREVIDEO_H_
+#define SIMULATOR_MUJOCO_SRC_MUJOCO_GLFW_COREVIDEO_H_
 
 #ifndef __APPLE__
-#error "This header only works on macOS."
-#endif
+#  error "This header only works on macOS."
+#endif  // __APPLE__
 
 #include <atomic>
 #include <condition_variable>
 #include <mutex>
 
-#include "glfw_dispatch.h"
+#include "simulator/mujoco/src/mujoco/glfw_dispatch.h"
 
 #ifdef __OBJC__
-#import <CoreVideo/CoreVideo.h>
+#  import <CoreVideo/CoreVideo.h>
 #else
 typedef void* CVDisplayLinkRef;
 #endif
@@ -36,7 +36,7 @@ typedef void* CVDisplayLinkRef;
 namespace mujoco {
 class GlfwCoreVideo {
  public:
-  GlfwCoreVideo(GLFWwindow* window);
+  explicit GlfwCoreVideo(GLFWwindow* window);
   ~GlfwCoreVideo();
 
   void WaitForDisplayRefresh();
@@ -53,5 +53,4 @@ class GlfwCoreVideo {
 };
 }  // namespace mujoco
 
-
-#endif  // MUJOCO_SIMULATE_GLFW_COREVIDEO_H_
+#endif  // SIMULATOR_MUJOCO_SRC_MUJOCO_GLFW_COREVIDEO_H_

@@ -12,18 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "platform_ui_adapter.h"
+#include "simulator/mujoco/src/mujoco/platform_ui_adapter.h"
 
 #include <chrono>
 
 namespace mujoco {
-PlatformUIAdapter::PlatformUIAdapter() {
-  mjr_defaultContext(&con_);
-}
+PlatformUIAdapter::PlatformUIAdapter() { mjr_defaultContext(&con_); }
 
-void PlatformUIAdapter::FreeMjrContext() {
-  mjr_freeContext(&con_);
-}
+void PlatformUIAdapter::FreeMjrContext() { mjr_freeContext(&con_); }
 
 bool PlatformUIAdapter::RefreshMjrContext(const mjModel* m, int fontscale) {
   if (m != last_model_ || fontscale != last_fontscale_) {
@@ -35,9 +31,7 @@ bool PlatformUIAdapter::RefreshMjrContext(const mjModel* m, int fontscale) {
   return false;
 }
 
-bool PlatformUIAdapter::EnsureContextSize() {
-  return false;
-}
+bool PlatformUIAdapter::EnsureContextSize() { return false; }
 
 void PlatformUIAdapter::OnFilesDrop(int count, const char** paths) {
   state_.type = mjEVENT_FILESDROP;
@@ -57,17 +51,14 @@ void PlatformUIAdapter::OnFilesDrop(int count, const char** paths) {
 void PlatformUIAdapter::OnKey(int key, int scancode, int act) {
   // translate API-specific key code
   int mj_key = TranslateKeyCode(key);
-  if(act==GLFW_PRESS)
-  {
-    key_7_pressed_=(key==GLFW_KEY_7);
-    key_8_pressed_=(key==GLFW_KEY_8);
-    key_9_pressed_=(key==GLFW_KEY_9);
-  }
-  else
-  {
-    key_7_pressed_=false;
-    key_8_pressed_=false;
-    key_9_pressed_=false;
+  if (act == GLFW_PRESS) {
+    key_7_pressed_ = (key == GLFW_KEY_7);
+    key_8_pressed_ = (key == GLFW_KEY_8);
+    key_9_pressed_ = (key == GLFW_KEY_9);
+  } else {
+    key_7_pressed_ = false;
+    key_8_pressed_ = false;
+    key_9_pressed_ = false;
   }
   // release: nothing to do
   if (!IsKeyDownEvent(act)) {
@@ -80,8 +71,7 @@ void PlatformUIAdapter::OnKey(int key, int scancode, int act) {
   // set key info
   state_.type = mjEVENT_KEY;
   state_.key = mj_key;
-  state_.keytime = std::chrono::duration<double>(
-      std::chrono::steady_clock::now().time_since_epoch()).count();
+  state_.keytime = std::chrono::duration<double>(std::chrono::steady_clock::now().time_since_epoch()).count();
 
   // application-specific processing
   if (event_callback_) {
@@ -91,7 +81,7 @@ void PlatformUIAdapter::OnKey(int key, int scancode, int act) {
   last_key_ = mj_key;
 }
 
-void PlatformUIAdapter::OnMouseButton(int button, int act)  {
+void PlatformUIAdapter::OnMouseButton(int button, int act) {
   // translate API-specific mouse button code
   mjtButton mj_button = TranslateMouseButton(button);
 
@@ -109,8 +99,7 @@ void PlatformUIAdapter::OnMouseButton(int button, int act)  {
 
   // press
   if (IsMouseButtonDownEvent(act)) {
-    double now = std::chrono::duration<double>(
-        std::chrono::steady_clock::now().time_since_epoch()).count();
+    double now = std::chrono::duration<double>(std::chrono::steady_clock::now().time_since_epoch()).count();
 
     // detect doubleclick: 250 ms
     if (mj_button == state_.button && now - state_.buttontime < 0.25) {
@@ -129,10 +118,7 @@ void PlatformUIAdapter::OnMouseButton(int button, int act)  {
       state_.dragbutton = state_.button;
       state_.dragrect = state_.mouserect;
     }
-  }
-
-  // release
-  else {
+  } else {  // release
     state_.type = mjEVENT_RELEASE;
   }
 
@@ -171,8 +157,7 @@ void PlatformUIAdapter::OnScroll(double xoffset, double yoffset) {
   UpdateMjuiState();
 
   // set scroll info, scale by buffer-to-window ratio
-  const double buffer_window_ratio =
-      static_cast<double>(GetFramebufferSize().first) / GetWindowSize().first;
+  const double buffer_window_ratio = static_cast<double>(GetFramebufferSize().first) / GetWindowSize().first;
   state_.type = mjEVENT_SCROLL;
   state_.sx = xoffset * buffer_window_ratio;
   state_.sy = yoffset * buffer_window_ratio;
@@ -239,8 +224,7 @@ void PlatformUIAdapter::UpdateMjuiState() {
 
   // get mouse position, scale by buffer-to-window ratio
   auto [x, y] = GetCursorPosition();
-  const double buffer_window_ratio =
-      static_cast<double>(GetFramebufferSize().first) / GetWindowSize().first;
+  const double buffer_window_ratio = static_cast<double>(GetFramebufferSize().first) / GetWindowSize().first;
   x *= buffer_window_ratio;
   y *= buffer_window_ratio;
 
@@ -254,6 +238,6 @@ void PlatformUIAdapter::UpdateMjuiState() {
   state_.y = y;
 
   // find mouse rectangle
-  state_.mouserect = mjr_findRect(mju_round(x), mju_round(y), state_.nrect-1, state_.rect+1) + 1;
+  state_.mouserect = mjr_findRect(mju_round(x), mju_round(y), state_.nrect - 1, state_.rect + 1) + 1;
 }
 }  // namespace mujoco

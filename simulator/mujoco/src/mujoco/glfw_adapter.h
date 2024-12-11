@@ -12,18 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef MUJOCO_SIMULATE_GLFW_ADAPTER_H_
-#define MUJOCO_SIMULATE_GLFW_ADAPTER_H_
-
-#include <utility>
+#ifndef SIMULATOR_MUJOCO_SRC_MUJOCO_GLFW_ADAPTER_H_
+#define SIMULATOR_MUJOCO_SRC_MUJOCO_GLFW_ADAPTER_H_
 
 #include <GLFW/glfw3.h>
 #include <mujoco/mujoco.h>
-#include "platform_ui_adapter.h"
+
+#include <utility>
+
+#include "simulator/mujoco/src/mujoco/platform_ui_adapter.h"
 
 #ifdef __APPLE__
-#include <optional>
-#include "glfw_corevideo.h"
+#  include <optional>
+#  include "glfw_corevideo.h"
 #endif
 
 namespace mujoco {
@@ -77,4 +78,4 @@ class GlfwAdapter : public PlatformUIAdapter {
 };
 }  // namespace mujoco
 
-#endif  // MUJOCO_SIMULATE_GLFW_ADAPTER_H_
+#endif  // SIMULATOR_MUJOCO_SRC_MUJOCO_GLFW_ADAPTER_H_

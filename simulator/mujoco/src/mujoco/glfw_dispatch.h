@@ -12,14 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef MUJOCO_SIMULATE_GLFW_DISPATCH_H_
-#define MUJOCO_SIMULATE_GLFW_DISPATCH_H_
+#ifndef SIMULATOR_MUJOCO_SRC_MUJOCO_GLFW_DISPATCH_H_
+#define SIMULATOR_MUJOCO_SRC_MUJOCO_GLFW_DISPATCH_H_
 
 #include <GLFW/glfw3.h>
 
 #ifdef __APPLE__
-#define GLFW_EXPOSE_NATIVE_NSGL
-#include <GLFW/glfw3native.h>
+#  define GLFW_EXPOSE_NATIVE_NSGL
+#  include <GLFW/glfw3native.h>
 #endif
 
 namespace mujoco {
@@ -74,4 +74,4 @@ struct Glfw {
 const struct Glfw& Glfw(void* dlhandle = nullptr);
 }  // namespace mujoco
 
-#endif  // MUJOCO_SIMULATE_GLFW_DISPATCH_H_
+#endif  // SIMULATOR_MUJOCO_SRC_MUJOCO_GLFW_DISPATCH_H_

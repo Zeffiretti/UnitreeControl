@@ -12,102 +12,94 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef MUJOCO_SIMULATE_PLATFORM_UI_ADAPTER_H_
-#define MUJOCO_SIMULATE_PLATFORM_UI_ADAPTER_H_
+#ifndef SIMULATOR_MUJOCO_SRC_MUJOCO_PLATFORM_UI_ADAPTER_H_
+#define SIMULATOR_MUJOCO_SRC_MUJOCO_PLATFORM_UI_ADAPTER_H_
 
-#include <utility>
-#include <iostream>
 #include <GLFW/glfw3.h>
-
 #include <mujoco/mujoco.h>
 
-namespace mujoco
-{
-  class PlatformUIAdapter
-  {
-  public:
-    virtual ~PlatformUIAdapter() = default;
+#include <iostream>
+#include <utility>
 
-    inline mjuiState &state() { return state_; }
-    inline const mjuiState &state() const { return state_; }
+namespace mujoco {
+class PlatformUIAdapter {
+ public:
+  virtual ~PlatformUIAdapter() = default;
 
-    inline mjrContext &mjr_context() { return con_; }
-    inline const mjrContext &mjr_context() const { return con_; }
+  inline mjuiState& state() { return state_; }
+  inline const mjuiState& state() const { return state_; }
 
-    inline void SetEventCallback(void (*event_callback)(mjuiState *))
-    {
-      event_callback_ = event_callback;
-    }
+  inline mjrContext& mjr_context() { return con_; }
+  inline const mjrContext& mjr_context() const { return con_; }
 
-    inline void SetLayoutCallback(void (*layout_callback)(mjuiState *))
-    {
-      layout_callback_ = layout_callback;
-    }
+  inline void SetEventCallback(void (*event_callback)(mjuiState*)) { event_callback_ = event_callback; }
 
-    // Optionally overridable function to (re)create an mjrContext for an mjModel
-    virtual bool RefreshMjrContext(const mjModel *m, int fontscale);
+  inline void SetLayoutCallback(void (*layout_callback)(mjuiState*)) { layout_callback_ = layout_callback; }
 
-    virtual bool EnsureContextSize();
+  // Optionally overridable function to (re)create an mjrContext for an mjModel
+  virtual bool RefreshMjrContext(const mjModel* m, int fontscale);
 
-    // Pure virtual functions to be implemented by individual adapters
-    virtual std::pair<double, double> GetCursorPosition() const = 0;
-    virtual double GetDisplayPixelsPerInch() const = 0;
-    virtual std::pair<int, int> GetFramebufferSize() const = 0;
-    virtual std::pair<int, int> GetWindowSize() const = 0;
-    virtual bool IsGPUAccelerated() const = 0;
-    virtual void PollEvents() = 0;
-    virtual void SetClipboardString(const char *text) = 0;
-    virtual void SetVSync(bool enabled) = 0;
-    virtual void SetWindowTitle(const char *title) = 0;
-    virtual bool ShouldCloseWindow() const = 0;
-    virtual void SwapBuffers() = 0;
-    virtual void ToggleFullscreen() = 0;
+  virtual bool EnsureContextSize();
 
-    virtual bool IsLeftMouseButtonPressed() const = 0;
-    virtual bool IsMiddleMouseButtonPressed() const = 0;
-    virtual bool IsRightMouseButtonPressed() const = 0;
+  // Pure virtual functions to be implemented by individual adapters
+  virtual std::pair<double, double> GetCursorPosition() const = 0;
+  virtual double GetDisplayPixelsPerInch() const = 0;
+  virtual std::pair<int, int> GetFramebufferSize() const = 0;
+  virtual std::pair<int, int> GetWindowSize() const = 0;
+  virtual bool IsGPUAccelerated() const = 0;
+  virtual void PollEvents() = 0;
+  virtual void SetClipboardString(const char* text) = 0;
+  virtual void SetVSync(bool enabled) = 0;
+  virtual void SetWindowTitle(const char* title) = 0;
+  virtual bool ShouldCloseWindow() const = 0;
+  virtual void SwapBuffers() = 0;
+  virtual void ToggleFullscreen() = 0;
 
-    virtual bool IsAltKeyPressed() const = 0;
-    virtual bool IsCtrlKeyPressed() const = 0;
-    virtual bool IsShiftKeyPressed() const = 0;
+  virtual bool IsLeftMouseButtonPressed() const = 0;
+  virtual bool IsMiddleMouseButtonPressed() const = 0;
+  virtual bool IsRightMouseButtonPressed() const = 0;
 
-    virtual bool IsKeyPressed(int key) const = 0;
+  virtual bool IsAltKeyPressed() const = 0;
+  virtual bool IsCtrlKeyPressed() const = 0;
+  virtual bool IsShiftKeyPressed() const = 0;
 
-    virtual bool IsMouseButtonDownEvent(int act) const = 0;
-    virtual bool IsKeyDownEvent(int act) const = 0;
+  virtual bool IsKeyPressed(int key) const = 0;
 
-    virtual int TranslateKeyCode(int key) const = 0;
-    virtual mjtButton TranslateMouseButton(int button) const = 0;
+  virtual bool IsMouseButtonDownEvent(int act) const = 0;
+  virtual bool IsKeyDownEvent(int act) const = 0;
 
-    bool key_7_pressed_ = false;
-    bool key_8_pressed_ = false;
-    bool key_9_pressed_ = false;
+  virtual int TranslateKeyCode(int key) const = 0;
+  virtual mjtButton TranslateMouseButton(int button) const = 0;
 
-  protected:
-    PlatformUIAdapter();
-    void FreeMjrContext();
+  bool key_7_pressed_ = false;
+  bool key_8_pressed_ = false;
+  bool key_9_pressed_ = false;
 
-    // Event handlers
-    void OnFilesDrop(int count, const char **paths);
-    virtual void OnKey(int key, int scancode, int act);
-    void OnMouseButton(int button, int act);
-    void OnMouseMove(double x, double y);
-    void OnScroll(double xoffset, double yoffset);
-    void OnWindowRefresh();
-    void OnWindowResize(int width, int height);
+ protected:
+  PlatformUIAdapter();
+  void FreeMjrContext();
 
-    mjuiState state_;
-    int last_key_;
-    void (*event_callback_)(mjuiState *);
-    void (*layout_callback_)(mjuiState *);
+  // Event handlers
+  void OnFilesDrop(int count, const char** paths);
+  virtual void OnKey(int key, int scancode, int act);
+  void OnMouseButton(int button, int act);
+  void OnMouseMove(double x, double y);
+  void OnScroll(double xoffset, double yoffset);
+  void OnWindowRefresh();
+  void OnWindowResize(int width, int height);
 
-    mjrContext con_;
-    const mjModel *last_model_ = nullptr;
-    int last_fontscale_ = -1;
+  mjuiState state_;
+  int last_key_;
+  void (*event_callback_)(mjuiState*);
+  void (*layout_callback_)(mjuiState*);
 
-  private:
-    void UpdateMjuiState();
-  };
-} // namespace mujoco
+  mjrContext con_;
+  const mjModel* last_model_ = nullptr;
+  int last_fontscale_ = -1;
 
-#endif // MUJOCO_SIMULATE_PLATFORM_UI_ADAPTER_H_
+ private:
+  void UpdateMjuiState();
+};
+}  // namespace mujoco
+
+#endif  // SIMULATOR_MUJOCO_SRC_MUJOCO_PLATFORM_UI_ADAPTER_H_
