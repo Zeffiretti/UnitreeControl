@@ -12,6 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <mujoco/mujoco.h>
+#include <pthread.h>
+
 #include <chrono>
 #include <cstdint>
 #include <cstdio>
@@ -23,9 +26,6 @@
 #include <new>
 #include <string>
 #include <thread>
-
-#include <mujoco/mujoco.h>
-#include <pthread.h>
 
 #include "simulator/mujoco/src/mujoco/array_safety.h"
 #include "simulator/mujoco/src/mujoco/glfw_adapter.h"
@@ -79,7 +79,6 @@ struct SimulationConfig {
 
   int enable_elastic_band = 0;
   int band_attached_link = 0;
-
 } config;
 
 using Seconds = std::chrono::duration<double>;
@@ -384,10 +383,7 @@ void PhysicsLoop(mj::Simulate& sim) {
             // run single step, let next iteration deal with timing
             mj_step(m, d);
             stepped = true;
-          }
-
-          // in-sync: step until ahead of cpu
-          else {
+          } else {  // in-sync: step until ahead of cpu
             bool measured = false;
             mjtNum prevSim = d->time;
 
@@ -405,8 +401,8 @@ void PhysicsLoop(mj::Simulate& sim) {
               // elastic band on base link
               if (sim.use_elastic_band_ == 1) {
                 if (sim.elastic_band_.enable_) {
-                  vector<double> x = {d->qpos[0], d->qpos[1], d->qpos[2]};
-                  vector<double> dx = {d->qvel[0], d->qvel[1], d->qvel[2]};
+                  std::vector<double> x = {d->qpos[0], d->qpos[1], d->qpos[2]};
+                  std::vector<double> dx = {d->qvel[0], d->qvel[1], d->qvel[2]};
 
                   sim.elastic_band_.Advance(x, dx);
 
@@ -431,10 +427,7 @@ void PhysicsLoop(mj::Simulate& sim) {
           if (stepped) {
             sim.AddToHistory();
           }
-        }
-
-        // paused
-        else {
+        } else {  // in-sync: step until ahead of cpu
           // run mj_forward, to update rendering and joint sliders
           mj_forward(m, d);
           sim.speed_changed = true;
@@ -492,7 +485,7 @@ void* UnitreeSdk2BridgeThread(void* arg) {
     config.band_attached_link = 6 * mj_name2id(m, mjOBJ_BODY, "base_link");
   }
 
-  ChannelFactory::Instance()->Init(config.domain_id, config.interface);
+  unitree::robot::ChannelFactory::Instance()->Init(config.domain_id, config.interface);
   UnitreeSdk2Bridge unitree_interface(m, d);
 
   if (config.use_joystick == 1) {
